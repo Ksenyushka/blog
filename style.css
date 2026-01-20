@@ -1,0 +1,432 @@
+/* ===== ГЛАВНЫЕ ПЕРЕМЕННЫЕ ===== */
+:root {
+    --main-pink: #cf888b;
+    --soft-pink: #f9e0e2;
+    --light-pink: #fdf2f3;
+    --off-white: #fffaf8;
+    --text-base: #6d4e52;
+    --accent-hover: #e9a6a9;
+    --shadow-soft: rgba(207, 136, 139, 0.3);
+    --bubble-color: rgba(255, 200, 210, 0.6);
+    --heart-color: rgba(255, 180, 190, 0.7);
+    --star-color: rgba(255, 220, 150, 0.8);
+    --cursor-trail-color: rgba(207, 136, 139, 0.3);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #fdf7f8 0%, #fde8eb 35%, #fbdde1 70%, #f9d2d7 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    font-family: "Cormorant Garamond", "Georgia", serif;
+    color: var(--text-base);
+    line-height: 1.76;
+    overflow-x: hidden;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6" fill="%23cf888b" opacity="0.7"/></svg>'), auto;
+}
+
+/* ==== ФОНОВЫЕ ПЛАВАЮЩИЕ ЭЛЕМЕНТЫ (ЛЕПЕСТКИ, СЕРДЦА, ТОЧКИ) ==== */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.24;
+    background-image: 
+        radial-gradient(circle at 10% 20%, var(--main-pink) 2.4px, transparent 3.2px),
+        radial-gradient(circle at 88% 75%, #ffb6c1 2.2px, transparent 3px),
+        radial-gradient(circle at 52% 8%, #f6ddeb 2px, transparent 2.8px),
+        radial-gradient(circle at 30% 90%, #ffc0cb 2.1px, transparent 2.9px),
+        radial-gradient(circle at 75% 12%, #e8c4d0 2.3px, transparent 3.1px);
+    animation: gentleDrift 110s linear infinite;
+    z-index: -1;
+}
+
+@keyframes gentleDrift {
+    0% { background-position: 0 0; }
+    100% { background-position: -400px 400px; }
+}
+
+/* ==== ДИНАМИЧЕСКИЕ ПЛАВАЮЩИЕ ЭЛЕМЕНТЫ ==== */
+.floating-element {
+    position: fixed;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.6;
+    animation: floatAround 24s linear infinite;
+    font-size: 1.6rem;
+    animation-timing-function: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+}
+
+.floating-petal { color: #ffc0cb; }
+.floating-cloud { color: #f0f8ff; font-size: 2.2rem; }
+.floating-star { color: var(--star-color); }
+
+@keyframes floatAround {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(50px, -60px) rotate(14deg); }
+    50% { transform: translate(100px, -40px) rotate(28deg); }
+    75% { transform: translate(50px, 70px) rotate(14deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+/* ==== ЭФФЕКТ ТЕНИ КУРСОРА ==== */
+.cursor-shadow {
+    position: fixed;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--cursor-trail-color);
+    pointer-events: none;
+    z-index: 9999;
+    mix-blend-mode: screen;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.2s ease-out;
+}
+
+/* ==== ОСНОВНОЙ КОНТЕЙНЕР С ГЛУБИНОЙ И РЕАКЦИЕЙ НА КУРСОР ==== */
+.container {
+    max-width: 960px;
+    margin: 100px auto;
+    padding: 80px 90px;
+    border-radius: 68px;
+    background: 
+        linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(254, 251, 252, 0.94)),
+        rgba(255, 252, 253, 0.96);
+    backdrop-filter: blur(20px);
+    box-shadow:
+        0 48px 120px var(--shadow-soft),
+        0 20px 60px rgba(210, 140, 145, 0.24),
+        inset 0 3px 16px rgba(255,255,255,0.95),
+        inset 0 -3px 18px rgba(249, 224, 226, 0.4);
+    position: relative;
+    z-index: 2;
+    border: 1px solid rgba(239, 200, 205, 0.6);
+    animation: breathe 18s ease-in-out infinite;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    transition: transform 0.6s ease, box-shadow 0.6s ease;
+}
+
+.container:hover {
+    transform: translateY(-12px) scale(1.015);
+    box-shadow:
+        0 54px 130px var(--shadow-soft),
+        0 22px 66px rgba(210, 140, 145, 0.28),
+        inset 0 3px 18px rgba(255,255,255,1),
+        inset 0 -3px 20px rgba(249, 224, 226, 0.45);
+}
+
+@keyframes breathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+}
+
+/* ==== HEADER С ПАРЯЩИМИ ЭФФЕКТАМИ И ГРАДИЕНТОМ ==== */
+header {
+    background: 
+        linear-gradient(160deg, var(--off-white), #fff7f9),
+        url("image/svg+xml,%3Csvg width='220' height='220' viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 30a6 6 0 1 1-12 0 6 6 0 0 1 12 0zm60 40a6 6 0 1 1-12 0 6 6 0 0 1 12 0zm-50-12a4 4 0 1 1-8 0 4 4 0 0 1 8 0zm70 40a4 4 0 1 1-8 0 4 4 0 0 1 8 0zm-40 20a4 4 0 1 1-8 0 4 4 0 0 1 8 0z' fill='%23cf888b' fill-opacity='0.14'/%3E%3C/svg%3E");
+    background-size: 380px;
+    background-blend-mode: overlay;
+    padding: 80px;
+    border-radius: 60px;
+    position: relative;
+    margin-bottom: 64px;
+    box-shadow: inset 0 2px 12px rgba(255,255,255,0.9);
+    animation: floatHeader 14s ease-in-out infinite;
+    transition: transform 0.6s ease;
+}
+
+header:hover {
+    transform: translateY(-12px);
+}
+
+@keyframes floatHeader {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+/* ==== ЗАГОЛОВОК С АНИМАЦИЕЙ И ЭФФЕКТОМ МЕРЦАНИЯ ==== */
+h1 {
+    font-family: "UnifrakturMaguntia", cursive;
+    font-size: 4rem;
+    text-align: center;
+    color: #8a5b61;
+    opacity: 0;
+    animation: bloomIn 3.2s cubic-bezier(0.22, 0.61, 0.36, 1) forwards 0.8s;
+    letter-spacing: 1.8px;
+    line-height: 1.1;
+    margin: 0;
+    text-shadow: 0 4px 8px rgba(255,255,255,0.65);
+    position: relative;
+}
+
+h1::after {
+    content: " ✧";
+    animation: twinkle 4s infinite alternate;
+    display: inline-block;
+    opacity: 0.95;
+}
+
+@keyframes bloomIn {
+    0% { opacity: 0; transform: translateY(44px) scale(0.91); }
+    70% { transform: translateY(-16px) scale(1.06); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes twinkle {
+    0% { opacity: 0.5; transform: scale(0.95); }
+    100% { opacity: 1; transform: scale(1.25); }
+}
+
+/* ==== ЦИТАТА НА КОРЕЙСКОМ С АНИМАЦИЕЙ ==== */
+.korean-quote {
+    text-align: center;
+    font-size: 1.5rem;
+    font-family: "Noto Sans KR", sans-serif;
+    color: #855c63;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1s ease, transform 1s ease;
+    margin: 40px 0;
+    padding: 20px;
+    border-radius: 24px;
+    background: rgba(255, 248, 249, 0.5);
+    box-shadow: inset 0 1px 4px rgba(255,255,255,0.7);
+}
+
+.korean-quote.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ==== КНОПКИ С МАКСИМАЛЬНОЙ ИНТЕРАКТИВНОСТЬЮ ==== */
+.btn {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.2rem;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    background: linear-gradient(to bottom, var(--light-pink), #fde0e3);
+    color: #855c63;
+    border: 1px solid #f3c8cc;
+    padding: 20px 44px;
+    border-radius: 44px;
+    cursor: pointer;
+    transition: all 0.48s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 6px 14px rgba(207, 136, 139, 0.24);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    display: block;
+    margin: 40px auto 0;
+}
+
+.btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+    transition: left 1s;
+    z-index: -1;
+}
+
+.btn:hover {
+    background: linear-gradient(to bottom, #fffdfd, #fdf6f8);
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 13px 30px var(--shadow-soft);
+    border-color: var(--accent-hover);
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+/* ==== ДЕКОРАТИВНАЯ ЛЕНТА С БЛЕСКОМ И АНИМАЦИЕЙ ==== */
+.decorative-border {
+    height: 9px;
+    margin: 68px auto;
+    width: 88%;
+    background: linear-gradient(90deg,
+        transparent,
+        var(--main-pink),
+        #fde0e3,
+        #ffffff,
+        #fde0e3,
+        var(--main-pink),
+        transparent);
+    border-radius: 5px;
+    box-shadow:
+        0 4px 8px rgba(0,0,0,0.07),
+        inset 0 1px 5px rgba(255,255,255,0.85);
+    position: relative;
+}
+
+.decorative-border::after {
+    content: " ✽";
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--main-pink);
+    font-size: 1.5rem;
+    opacity: 0.9;
+    animation: pulse 3s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.6; }
+    50% { transform: translateX(-50%) scale(1.5); opacity: 1; }
+}
+
+/* ==== H2 С ДИНАМИЧЕСКИМИ СИМВОЛАМИ ==== */
+h2 {
+    position: relative;
+    padding-bottom: 52px;
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 600;
+    font-size: 2.4rem;
+    color: #835a60;
+    text-align: center;
+    margin: 76px 0 52px;
+    animation: floatText 9s ease-in-out infinite;
+}
+
+h2::before,
+h2::after {
+    content: "✿";
+    position: absolute;
+    bottom: -24px;
+    color: var(--main-pink);
+    font-size: 2rem;
+    opacity: 0.8;
+    font-family: "Times New Roman", serif;
+    animation: sway 6.5s infinite alternate;
+}
+
+h2::before { left: 26%; animation-delay: 0s; }
+h2::after { right: 26%; animation-delay: 1.6s; }
+
+@keyframes floatText {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-7px); }
+}
+
+@keyframes sway {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(-6px) rotate(3.5deg); }
+}
+
+/* ==== КАРТОЧКИ С РЕАКЦИЕЙ НА КУРСОР И ВОЛШЕБНЫМИ ЭФФЕКТАМИ ==== */
+.card {
+    background: 
+        linear-gradient(135deg, rgba(255, 254, 255, 0.96), rgba(255, 252, 254, 0.94));
+    border-radius: 44px;
+    padding: 46px;
+    margin: 40px 0;
+    border: 1px solid rgba(235, 205, 210, 0.65);
+    transition: all 0.52s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow:
+        0 8px 20px rgba(207, 136, 139, 0.16),
+        inset 0 2px 7px rgba(255,255,255,0.9);
+    position: relative;
+    overflow: hidden;
+    transform-style: preserve-3d;
+}
+
+.card::before {
+    content: "•";
+    position: absolute;
+    top: 18px;
+    right: 30px;
+    font-size: 2rem;
+    color: var(--main-pink);
+    opacity: 0.5;
+    animation: sparkle 5.2s infinite;
+}
+
+.card:hover {
+    transform: translateY(-16px) rotateX(7deg);
+    box-shadow:
+        0 30px 62px var(--shadow-soft),
+        inset 0 3px 9px rgba(255,255,255,0.95);
+    border-color: rgba(220, 160, 165, 0.8);
+}
+
+@keyframes sparkle {
+    0%, 100% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 0.9; transform: scale(1.6); }
+}
+
+/* ==== ТЕКСТ И ССЫЛКИ С АНИМАЦИЕЙ И ГРАДИЕНТОМ ПОДЧЁРКИ ==== */
+p, li {
+    font-size: 1.22rem;
+    color: var(--text-base);
+    margin-bottom: 28px;
+    font-weight: 400;
+}
+
+a {
+    color: var(--main-pink);
+    text-decoration: none;
+    transition: all 0.28s ease;
+    position: relative;
+    display: inline-block;
+    padding: 0 2px;
+}
+
+a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 0;
+    height: 1.8px;
+    background: linear-gradient(90deg, transparent, var(--accent-hover), transparent);
+    transition: width 0.4s ease;
+}
+
+a:hover {
+    color: #e29ca0;
+    letter-spacing: 0.8px;
+    transform: translateY(-2px);
+}
+
+a:hover::after {
+    width: 100%;
+}
+
+/* ==== ПЛАВНОЕ ПОЯВЛЕНИЕ ЭЛЕМЕНТОВ ПРИ СКРОЛЛЕ (Intersection Observer) ==== */
+.fade-in-element {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+}
+
+.fade-in-element.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ==== ЛЁГКИЙ ОТСТУП МЕЖДУ БЛОКАМИ ==== */
+.container > *:not(:first-child) {
+    margin-top: 44px;
+}
+
+/* ==== ПОДКЛЮЧЕНИЕ ШРИФТОВ (вставьте в <head>) ====
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+*/
